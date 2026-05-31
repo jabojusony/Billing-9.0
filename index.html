@@ -1,0 +1,1362 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billing App</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#e8f5e9;
+color:#1b4332;
+}
+
+/* HEADER */
+
+.header{
+background:#2d6a4f;
+color:white;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:24px;
+font-weight:bold;
+box-shadow:0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* MAIN CONTAINER */
+
+.container{
+display:flex;
+height:92vh;
+}
+
+/* LEFT PANEL */
+
+.left-home,
+.left{
+width:40%;
+background:#d8f3dc;
+padding:20px;
+overflow:auto;
+border-right:3px solid #95d5b2;
+}
+
+/* RIGHT PANEL */
+
+.right-home,
+.right{
+width:60%;
+padding:20px;
+overflow:auto;
+background:#f1faee;
+}
+
+/* CUSTOMER BOX */
+
+.customer-box{
+background:white;
+padding:15px;
+margin-bottom:12px;
+border-radius:14px;
+cursor:pointer;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+border-left:6px solid #40916c;
+transition:0.2s;
+}
+
+.customer-box:hover{
+transform:scale(1.01);
+}
+
+/* BILLING PAGE */
+
+.billing-page{
+display:none;
+width:100%;
+}
+
+/* ITEM CARD */
+
+.item{
+background:white;
+padding:18px;
+margin-bottom:12px;
+border-radius:14px;
+cursor:pointer;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+border-left:6px solid #52b788;
+transition:0.2s;
+}
+
+.item:hover{
+transform:scale(1.01);
+}
+
+/* CART ITEM */
+
+.cart-item{
+background:white;
+padding:14px;
+margin-bottom:10px;
+border-radius:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* BUTTONS */
+
+button{
+border:none;
+padding:10px 15px;
+border-radius:10px;
+cursor:pointer;
+font-size:16px;
+margin:3px;
+transition:0.2s;
+}
+
+button:hover{
+opacity:0.9;
+}
+
+/* QTY BUTTON */
+
+.qty-btn{
+background:#40916c;
+color:white;
+}
+
+/* BILL BUTTON */
+
+.bill-btn{
+width:100%;
+background:#2d6a4f;
+color:white;
+padding:15px;
+font-size:20px;
+margin-top:20px;
+}
+
+/* TOTAL */
+
+.total{
+font-size:28px;
+font-weight:bold;
+margin-top:20px;
+color:#1b4332;
+}
+
+/* POPUP */
+
+.popup{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+/* POPUP CONTENT */
+
+.popup-content{
+background:#f1faee;
+padding:30px;
+border-radius:18px;
+width:320px;
+text-align:center;
+box-shadow:0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* PAYMENT BUTTON */
+
+.pay-btn{
+width:100%;
+margin-top:15px;
+background:#2d6a4f;
+color:white;
+}
+
+/* BACK BUTTON */
+
+.back-btn{
+background:#74c69d;
+color:white;
+}
+
+/* INPUT */
+
+input{
+padding:12px;
+margin-top:10px;
+font-size:16px;
+border-radius:10px;
+border:2px solid #95d5b2;
+width:90%;
+background:white;
+}
+
+/* HISTORY */
+
+.history-card{
+background:white;
+padding:15px;
+margin-bottom:15px;
+border-radius:14px;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+border-left:6px solid #2d6a4f;
+}
+
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+background:white;
+}
+
+th{
+background:#40916c;
+color:white;
+}
+
+th,td{
+border:1px solid #95d5b2;
+padding:10px;
+text-align:left;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+<div>
+Billing App
+</div>
+
+<button
+id="settingsBtn"
+onclick="openSettings()"
+style="display:none;">
+Settings
+</button>
+
+</div>
+
+<!-- MODE PAGE -->
+
+<div id="modePage"
+style="
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+gap:20px;
+">
+
+<h1>Select Mode</h1>
+
+<button
+onclick="enterMode('day')"
+style="background:orange;color:white;">
+DAY MODE
+</button>
+
+<button
+onclick="enterMode('night')"
+style="background:black;color:white;">
+NIGHT MODE
+</button>
+
+</div>
+
+<!-- HOME -->
+
+<div class="container"
+id="homePage"
+style="display:none;">
+
+<div class="left-home">
+
+<h2>Create Customer</h2>
+
+<input
+type="text"
+id="customerInput"
+placeholder="Customer Name">
+
+<br><br>
+
+<input
+type="number"
+id="phoneInput"
+placeholder="Phone Number">
+
+<br><br>
+
+<button onclick="addCustomer()">
+Create Customer
+</button>
+
+<br><br>
+
+<button
+onclick="backToModeSelection()"
+style="background:black;color:white;">
+Back To Modes
+</button>
+
+</div>
+
+<div class="right-home">
+
+<h2 id="modeTitle"></h2>
+
+<div id="customerList"></div>
+
+</div>
+
+</div>
+
+<!-- BILLING -->
+
+<div class="billing-page"
+id="billingPage">
+
+<div class="container">
+
+<div class="left">
+
+<h2>Items</h2>
+
+<div id="itemsList"></div>
+
+</div>
+
+<div class="right">
+
+<button
+class="back-btn"
+onclick="goHome()">
+Home
+</button>
+
+<h1 id="customerTitle"></h1>
+
+<div id="cart"></div>
+
+<div
+class="total"
+id="total">
+Total: Rs.0
+</div>
+
+<br>
+
+<input
+type="number"
+id="discountInput"
+placeholder="Discount Amount">
+
+<br><br>
+
+<button
+class="bill-btn"
+onclick="openPayment()">
+BILL
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- SETTINGS -->
+
+<div id="settingsPage"
+style="display:none;padding:20px;">
+
+<button
+class="back-btn"
+onclick="closeSettingsPage()">
+Back
+</button>
+
+<h1>Settings</h1>
+
+<input
+type="text"
+id="itemName"
+placeholder="Item Name">
+
+<br><br>
+
+<input
+type="number"
+id="itemPrice"
+placeholder="Item Price">
+
+<br><br>
+
+<button onclick="addNewItem()">
+Add Item
+</button>
+
+<br><br>
+
+<button onclick="openHistoryPage()">
+Paid History
+</button>
+
+<br><br>
+
+<br><br>
+
+<button onclick="downloadData()">
+
+Download Report
+
+</button>
+
+<button
+onclick="resetPaidData()"
+style="background:red;color:white;">
+Reset Paid History
+</button>
+
+<h2>Items</h2>
+
+<div id="settingsItems"></div>
+
+</div>
+
+<!-- HISTORY -->
+
+<div id="historyPage"
+style="display:none;padding:20px;">
+
+<button
+class="back-btn"
+onclick="closeHistoryPage()">
+Back
+</button>
+
+<h1>Paid History</h1>
+
+<div id="historyList"></div>
+
+</div>
+
+<!-- PAYMENT -->
+
+<div class="popup"
+id="paymentPopup">
+
+<div class="popup-content">
+
+<h2>Total Bill</h2>
+
+<h1 id="popupTotal">
+Rs.0
+</h1>
+
+<button
+class="pay-btn"
+onclick="showCashPopup()">
+Cash
+</button>
+
+<button
+class="pay-btn"
+onclick="showQRPopup()">
+Online
+</button>
+
+<button
+class="pay-btn"
+onclick="closePaymentPopup()"
+style="background:red;">
+Back
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+let currentMode = "day";
+
+let customers = [];
+let customerCarts = {};
+let cart = [];
+let items = [];
+let currentCustomer = "";
+
+window.paidHistory = [];
+
+function loadModeData(){
+
+customers =
+JSON.parse(localStorage.getItem(currentMode+"_customers")) || [];
+
+customerCarts =
+JSON.parse(localStorage.getItem(currentMode+"_customerCarts")) || {};
+
+items =
+JSON.parse(localStorage.getItem(currentMode+"_items")) || [
+
+{name:"Burger",price:120},
+{name:"Pizza",price:250},
+{name:"Coke",price:40},
+{name:"Fries",price:90}
+
+];
+
+window.paidHistory =
+JSON.parse(localStorage.getItem(currentMode+"_history")) || [];
+
+renderCustomers();
+renderItems();
+}
+
+function saveAllData(){
+
+localStorage.setItem(
+currentMode+"_customers",
+JSON.stringify(customers)
+);
+
+localStorage.setItem(
+currentMode+"_customerCarts",
+JSON.stringify(customerCarts)
+);
+
+localStorage.setItem(
+currentMode+"_items",
+JSON.stringify(items)
+);
+
+localStorage.setItem(
+currentMode+"_history",
+JSON.stringify(window.paidHistory)
+);
+}
+
+function enterMode(mode){
+
+currentMode = mode;
+
+loadModeData();
+
+document.getElementById("modePage").style.display =
+"none";
+
+document.getElementById("homePage").style.display =
+"flex";
+
+document.getElementById("settingsBtn").style.display =
+"block";
+
+document.getElementById("modeTitle").innerHTML =
+mode.toUpperCase() + " MODE CUSTOMERS";
+}
+
+function backToModeSelection(){
+
+document.getElementById("homePage").style.display =
+"none";
+
+document.getElementById("modePage").style.display =
+"flex";
+
+document.getElementById("settingsBtn").style.display =
+"none";
+}
+
+function addCustomer(){
+
+let name =
+document.getElementById("customerInput").value;
+
+let phone =
+document.getElementById("phoneInput").value;
+
+if(name=="" || phone=="") return;
+
+customers.push({
+name:name,
+phone:phone
+});
+
+customerCarts[name] = [];
+
+saveAllData();
+
+renderCustomers();
+
+document.getElementById("customerInput").value="";
+document.getElementById("phoneInput").value="";
+}
+
+function renderCustomers(){
+
+let list =
+document.getElementById("customerList");
+
+list.innerHTML="";
+
+customers.forEach(customer=>{
+
+list.innerHTML += `
+
+<div class="customer-box"
+onclick="openCustomer('${customer.name}')">
+
+<h3>${customer.name}</h3>
+
+<p>${customer.phone}</p>
+
+</div>
+
+`;
+
+});
+}
+
+function renderItems(){
+
+let list =
+document.getElementById("itemsList");
+
+list.innerHTML="";
+
+items.forEach(item=>{
+
+list.innerHTML += `
+
+<div class="item"
+onclick="addItem('${item.name}',${item.price})">
+
+${item.name} - Rs.${item.price}
+
+</div>
+
+`;
+
+});
+}
+
+function openCustomer(name){
+
+currentCustomer = name;
+
+cart = customerCarts[name] || [];
+
+document.getElementById("homePage").style.display =
+"none";
+
+document.getElementById("billingPage").style.display =
+"block";
+
+updateCart();
+}
+
+function goHome(){
+
+customerCarts[currentCustomer] = cart;
+
+saveAllData();
+
+document.getElementById("billingPage").style.display =
+"none";
+
+document.getElementById("homePage").style.display =
+"flex";
+
+renderCustomers();
+}
+
+function addItem(name,price){
+
+let found =
+cart.find(item=>item.name===name);
+
+if(found){
+
+found.qty++;
+
+}else{
+
+cart.push({
+name:name,
+price:price,
+qty:1
+});
+
+}
+
+updateCart();
+}
+
+function increaseQty(index){
+
+cart[index].qty++;
+
+updateCart();
+}
+
+function decreaseQty(index){
+
+if(cart[index].qty>1){
+
+cart[index].qty--;
+
+}else{
+
+cart.splice(index,1);
+
+}
+
+updateCart();
+}
+
+function updateCart(){
+
+let cartDiv =
+document.getElementById("cart");
+
+cartDiv.innerHTML="";
+
+let total = 0;
+
+cart.forEach((item,index)=>{
+
+total += item.price * item.qty;
+
+cartDiv.innerHTML += `
+
+<div class="cart-item">
+
+<div>${item.name}</div>
+
+<div>
+
+<button
+class="qty-btn"
+onclick="decreaseQty(${index})">
+-
+</button>
+
+${item.qty}
+
+<button
+class="qty-btn"
+onclick="increaseQty(${index})">
++
+</button>
+
+</div>
+
+<div>
+Rs.${item.price * item.qty}
+</div>
+
+</div>
+
+`;
+
+});
+
+document.getElementById("total").innerHTML =
+"Total: Rs."+total;
+}
+
+function getTotal(){
+
+let total = 0;
+
+cart.forEach(item=>{
+total += item.price * item.qty;
+});
+
+let discount =
+Number(document.getElementById("discountInput").value) || 0;
+
+total -= discount;
+
+if(total < 0){
+total = 0;
+}
+
+return total;
+}
+
+function openPayment(){
+
+document.getElementById("paymentPopup").style.display =
+"flex";
+
+document.getElementById("popupTotal").innerHTML =
+"Rs."+getTotal();
+}
+
+function closePaymentPopup(){
+
+document.getElementById("paymentPopup").innerHTML = `
+
+<div class="popup-content">
+
+<h2>Total Bill</h2>
+
+<h1 id="popupTotal">
+Rs.${getTotal()}
+</h1>
+
+<button
+class="pay-btn"
+onclick="showCashPopup()">
+Cash
+</button>
+
+<button
+class="pay-btn"
+onclick="showQRPopup()">
+Online
+</button>
+
+<button
+class="pay-btn"
+onclick="closePaymentPopup()"
+style="background:red;">
+Back
+</button>
+
+</div>
+
+`;
+
+document.getElementById("paymentPopup").style.display =
+"none";
+
+}
+
+function showCashPopup(){
+
+paymentSuccess(getTotal(),0);
+}
+
+function showQRPopup(){
+
+let total =
+getTotal();
+
+document.getElementById("paymentPopup").innerHTML = `
+
+<div class="popup-content">
+
+<h2>Total : Rs.${total}</h2>
+
+<input
+type="number"
+id="cashPaidInput"
+placeholder="Cash Paid Amount">
+
+<br><br>
+
+<button
+class="pay-btn"
+onclick="generateQRWithCash()">
+Generate QR
+</button>
+
+<button
+class="pay-btn"
+onclick="closePaymentPopup()"
+style="background:red;">
+Back
+</button>
+
+</div>
+
+`;
+}
+
+function generateQRWithCash(){
+
+let total =
+getTotal();
+
+let cashPaid =
+Number(document.getElementById("cashPaidInput").value) || 0;
+
+let remaining =
+total - cashPaid;
+
+if(remaining < 0){
+remaining = 0;
+}
+
+let upiLink =
+`upi://pay?pa=sonnyjaboju@oksbi&pn=Sony&am=${remaining}&cu=INR`;
+
+let qrURL =
+"https://api.qrserver.com/v1/create-qr-code/?size=220x220&data="+
+encodeURIComponent(upiLink);
+
+document.getElementById("paymentPopup").innerHTML = `
+
+<div class="popup-content">
+
+<h2>Scan QR To Pay</h2>
+
+<img
+src="${qrURL}"
+style="
+width:220px;
+height:220px;
+">
+
+<h2>
+Online : Rs.${remaining}
+</h2>
+
+<h3>
+Cash : Rs.${cashPaid}
+</h3>
+
+<button
+class="pay-btn"
+onclick="paymentSuccess(${cashPaid},${remaining})">
+Paid
+</button>
+
+<button
+class="pay-btn"
+onclick="closePaymentPopup()"
+style="background:red;">
+Back
+</button>
+
+</div>
+
+`;
+}
+
+function paymentSuccess(cashPaid=0,onlinePaid=0){
+let discount =
+Number(document.getElementById("discountInput").value) || 0;
+
+
+let originalTotal = 0;
+
+cart.forEach(item=>{
+
+originalTotal += item.price * item.qty;
+
+});
+
+let finalAmount =
+originalTotal - discount;
+
+if(finalAmount < 0){
+finalAmount = 0;
+}
+
+let customerData =
+customers.find(c => c.name === currentCustomer);
+
+ let paymentMode = "";
+
+if(cashPaid > 0 && onlinePaid > 0){
+
+paymentMode = "Cash + Online";
+
+}else if(cashPaid > 0){
+
+paymentMode = "Cash";
+
+}else{
+
+paymentMode = "Online";
+
+}
+
+ window.paidHistory.push({
+
+date:new Date().toLocaleString(),
+
+customer:currentCustomer,
+
+phone:customerData.phone,
+
+items:cart.map(item =>
+item.name + " x" + item.qty).join(", "),
+
+totalAmount:originalTotal,
+
+discount:discount,
+
+finalAmount:finalAmount,
+
+cashPaid:cashPaid,
+
+onlinePaid:onlinePaid,
+
+paymentMode:paymentMode
+
+});
+
+customers =
+customers.filter(c => c.name !== currentCustomer);
+
+delete customerCarts[currentCustomer];
+
+saveAllData();
+
+renderCustomers();
+
+cart = [];
+
+document.getElementById("discountInput").value = "";
+
+let cashInput =
+document.getElementById("cashPaidInput");
+
+if(cashInput){
+cashInput.value = "";
+}
+
+document.getElementById("paymentPopup").innerHTML = `
+
+<div class="popup-content">
+
+<h2>Total Bill</h2>
+
+<h1 id="popupTotal">
+Rs.0
+</h1>
+
+<button
+class="pay-btn"
+onclick="showCashPopup()">
+Cash
+</button>
+
+<button
+class="pay-btn"
+onclick="showQRPopup()">
+Online
+</button>
+
+<button
+class="pay-btn"
+onclick="closePaymentPopup()"
+style="background:red;">
+Back
+</button>
+
+</div>
+
+`;
+
+document.getElementById("paymentPopup").style.display =
+"none";
+
+alert("Payment Successful");
+
+goHome();
+
+}
+
+function openSettings(){
+
+document.getElementById("homePage").style.display =
+"none";
+
+document.getElementById("settingsPage").style.display =
+"block";
+
+renderSettingsItems();
+}
+
+function closeSettingsPage(){
+
+document.getElementById("settingsPage").style.display =
+"none";
+
+document.getElementById("homePage").style.display =
+"flex";
+}
+
+function addNewItem(){
+
+let name =
+document.getElementById("itemName").value;
+
+let price =
+document.getElementById("itemPrice").value;
+
+if(name=="" || price=="") return;
+
+items.push({
+name:name,
+price:Number(price)
+});
+
+saveAllData();
+
+renderItems();
+
+renderSettingsItems();
+
+document.getElementById("itemName").value="";
+document.getElementById("itemPrice").value="";
+}
+
+function renderSettingsItems(){
+
+let list =
+document.getElementById("settingsItems");
+
+list.innerHTML="";
+
+items.forEach((item,index)=>{
+
+list.innerHTML += `
+
+<div class="item">
+
+${item.name} - Rs.${item.price}
+
+<button
+style="background:red;color:white;"
+onclick="deleteItem(${index})">
+Delete
+</button>
+
+</div>
+
+`;
+
+});
+}
+
+function deleteItem(index){
+
+items.splice(index,1);
+
+saveAllData();
+
+renderItems();
+
+renderSettingsItems();
+}
+
+function openHistoryPage(){
+
+document.getElementById("settingsPage").style.display =
+"none";
+
+document.getElementById("historyPage").style.display =
+"block";
+
+renderHistory();
+}
+
+function closeHistoryPage(){
+
+document.getElementById("historyPage").style.display =
+"none";
+
+document.getElementById("settingsPage").style.display =
+"block";
+}
+
+function renderHistory(){
+
+let list =
+document.getElementById("historyList");
+
+list.innerHTML="";
+
+window.paidHistory.forEach(order=>{
+
+list.innerHTML += `
+
+<div class="history-card">
+
+<h3>${order.customer}</h3>
+
+<p><b>Date:</b> ${order.date}</p>
+
+<p><b>Phone:</b> ${order.phone}</p>
+
+<p><b>Items:</b> ${order.items}</p>
+
+<p><b>Total Amount :</b> Rs.${order.totalAmount}</p>
+
+<p><b>Discount :</b> Rs.${order.discount}</p>
+
+<p><b>Final Amount :</b> Rs.${order.finalAmount}</p>
+
+<p><b>Discount:</b> Rs.${order.discount}</p>
+
+<p><b>Payment Mode:</b> ${order.paymentMode}</p>
+
+<p><b>Cash Paid:</b> Rs.${order.cashPaid}</p>
+
+<p><b>Online Paid:</b> Rs.${order.onlinePaid}</p>
+
+</div>
+
+`;
+
+});
+}
+
+function resetPaidData(){
+
+let confirmReset =
+confirm("Are you sure you want to reset all paid history?");
+
+if(confirmReset){
+
+window.paidHistory = [];
+
+localStorage.setItem(
+currentMode+"_history",
+JSON.stringify(window.paidHistory)
+);
+
+renderHistory();
+
+alert("Paid history cleared successfully");
+
+}else{
+
+alert("Reset cancelled");
+
+}
+
+function downloadData(){
+
+let reportWindow =
+window.open('', '_blank');
+
+let html = `
+
+<html>
+
+<head>
+
+<style>
+
+body{
+font-family:Arial;
+padding:20px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+border:1px solid black;
+padding:10px;
+text-align:left;
+}
+
+th{
+background:#ddd;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>${currentMode.toUpperCase()} MODE SALES REPORT</h1>
+
+<table>
+
+<tr>
+
+<th>Date Paid</th>
+<th>Customer Name</th>
+<th>Phone</th>
+<th>Items</th>
+<p><b>Total Amount :</b> Rs.${order.totalAmount}</p>
+
+<p><b>Discount :</b> Rs.${order.discount}</p>
+
+<p><b>Final Amount :</b> Rs.${order.finalAmount}</p>
+</tr>
+
+`;
+
+window.paidHistory.forEach(order=>{
+
+html += `
+
+<tr>
+
+<td>${order.date}</td>
+<td>${order.customer}</td>
+<td>${order.phone}</td>
+<td>${order.items}</td>
+<td>Rs.${order.totalAmount}</td>
+<td>Rs.${order.discount}</td>
+<td>Rs.${order.finalAmount}</td>
+<td>${order.paymentMode}</td>
+
+</tr>
+
+`;
+
+});
+
+html += `
+
+</table>
+
+</body>
+
+</html>
+
+`;
+
+reportWindow.document.write(html);
+
+reportWindow.document.close();
+
+reportWindow.focus();
+
+setTimeout(()=>{
+reportWindow.print();
+},500);
+
+}
+}
+</script>
+
+</body>
+</html>
